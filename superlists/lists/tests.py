@@ -16,6 +16,10 @@ class HomePageTest(TestCase):
     def test_home_page_html(self):
         """Unit test checking that home page html is as expected."""
         response = self.client.get('/')
-        html = response.content.decode('utf8')
-        expected_html = render_to_string('home.html')
+        self.assertTemplateUsed(response, 'home.html')
+
+    def test_save_POST(self):
+        """Unit test checking that home page can save a post request."""
+        response = self.client.post('/', data={'item_text': 'A new list item'})
+        self.assertIn('A new list item', response.content.decode())
         self.assertTemplateUsed(response, 'home.html')
