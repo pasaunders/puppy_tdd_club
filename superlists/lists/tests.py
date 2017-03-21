@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.http import HttpRequest
 from django.core.urlresolvers import resolve
+from django.template.loader import render_to_string
 from lists.views import home_page
 
 
@@ -14,9 +15,7 @@ class HomePageTest(TestCase):
 
     def test_home_page_html(self):
         """Unit test checking that home page html is as expected."""
-        request = HttpRequest()
-        response = home_page(request)
+        response = self.client.get('/')
         html = response.content.decode('utf8')
-        self.assertTrue(html.startswith('<html>'))
-        self.assertIn('<title>To-Do lists</title>', html)
-        self.assertTrue(html.endswith('</html>'))
+        expected_html = render_to_string('home.html')
+        self.assertTemplateUsed(response, 'home.html')
